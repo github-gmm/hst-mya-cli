@@ -1,9 +1,9 @@
 {
-  "name": "hst-mya",
+  "name": "hst-mya-cli",
   "version": "1.0.0",
   "description": "华盛通脚手架",
   "bin": {
-    "hst-mya": "bin/hstCli.js"
+    "hst-mya-cli": "bin/hstCli.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
