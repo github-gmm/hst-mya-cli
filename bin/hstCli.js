@@ -2,6 +2,7 @@
 
 const program = require("commander");
 const create = require('./createCode');
+const generatePage = require('./generatePage');
 const inquirer = require('inquirer')
 
 const questions = [
@@ -45,6 +46,47 @@ const questions = [
   },
 ]
 
+const questions2 = [
+  {
+    type: 'list',
+    message: '生成列表页（是否带详情页）',
+    name: 'isDetail',
+    choices: [
+        {
+          name: '是',
+          value: '1'
+        },
+        {
+          name: '否',
+          value: '2'
+        },
+    ]
+  },
+  {
+    type: 'list',
+    message: '详情页的类型',
+    name: 'detailType',
+    when (condition) {
+      return condition.isDetail === '1';
+    },
+    choices: [
+        {
+          name: 'Modal 弹框',
+          value: 'modal'
+        },
+        {
+          name: 'Drawer 侧弹框',
+          value: 'drawer'
+        },
+        {
+          name: '新页面',
+          value: 'new'
+        },
+    ]
+  },
+]
+
+
 // 定义指令
 program
   .version('1.0.0')
@@ -60,6 +102,17 @@ program
   	console.log(`脚手架生成项目 ${name}`);
     inquirer.prompt(questions).then(async answer=>{
       create({ ...answer, projectName: name}, options);
+    })
+  })
+program
+  .command(`generatePage`)
+  .description("生成一个页面")
+  .argument("<page-name>", "页面名称")
+  .action((name, options) => {
+    // 回调函数
+  	console.log(`生成页面 ${name}`);
+    inquirer.prompt(questions2).then(async answer=>{
+      generatePage({ ...answer, pageName: name}, options);
     })
   })
 program
