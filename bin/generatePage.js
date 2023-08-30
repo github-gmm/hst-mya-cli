@@ -2,6 +2,7 @@ const path = require('path')
 const fs = require('fs-extra')
 const pageData = require('../static/page');
 const serviceData = require('../static/service');
+const typeData = require('../static/type');
 
 const generateFile = (targetFile, fileData) => {
   return new Promise((resolve)=>{
@@ -23,19 +24,19 @@ const reWriteRouteFile = (targetFolder, info) => {
     if (info.detailType !== 'new') {
       newData = `[${extractedData}  {
     name: '${info.pageName.charAt(0).toLowerCase() + info.pageName.slice(1)}',
-    path: '/${info.pageName.replace(/([A-Z])/g, "-$1").toLowerCase()}',
+    path: '/${info.pageName.replace(/([A-Z])/g, "-$1").toLowerCase().slice(1)}',
     component: '@/pages/${info.pageName}/index',
   },
 ]`
     } else {
       newData = `[${extractedData}  {
     name: '${info.pageName.charAt(0).toLowerCase() + info.pageName.slice(1)}',
-    path: '/${info.pageName.replace(/([A-Z])/g, "-$1").toLowerCase()}',
+    path: '/${info.pageName.replace(/([A-Z])/g, "-$1").toLowerCase().slice(1)}',
     component: '@/pages/${info.pageName}/index',
   },
   {
     name: '${info.pageName.charAt(0).toLowerCase() + info.pageName.slice(1)}Detail',
-    path: '/${info.pageName.replace(/([A-Z])/g, "-$1").toLowerCase()}-detail',
+    path: '/${info.pageName.replace(/([A-Z])/g, "-$1").toLowerCase().slice(1)}-detail',
     component: '@/pages/${info.pageName}/detail',
   },
 ]`
@@ -83,7 +84,7 @@ module.exports = async function (info, option) {
   if (info.detailType === 'new') {
     generateFile(pageDetailFile, '');
   }
-  generateFile(serviceFile, JSON.parse(JSON.stringify(serviceData({}))));
-  generateFile(serviceTypeFile, '');
+  generateFile(serviceFile, JSON.parse(JSON.stringify(serviceData({info}))));
+  generateFile(serviceTypeFile, JSON.parse(JSON.stringify(typeData({info}))));
 
 }

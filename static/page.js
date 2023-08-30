@@ -1,11 +1,12 @@
-module.exports = () => {
+module.exports = (info) => {
 	return (
 		`
+import { ActionType, ProColumns } from '@ant-design/pro-components';
+import { queryListData } from '@/services/${info.pageName}';
 import HsTable from '@/components/HsTable';
 import { renderOptions } from '@/utils';
-import intl from '@/utils/intl';
-import { ActionType, ProColumns } from '@ant-design/pro-components';
 import React, { useRef } from 'react';
+import intl from '@/utils/intl';
 
 const Index: React.FC = () => {
 	// 表格ref
@@ -13,37 +14,35 @@ const Index: React.FC = () => {
 
 	const columns: ProColumns[] = [
 		{
-			title: intl.$T('hs.sns.live.manager.field.option').$D('操作'),
+			title: intl.$T('hs.xxx.${info.pageName.replace(/([A-Z])/g, ".$1").toLowerCase().slice(1)}.field.option').$D('操作'),
 			valueType: 'option', // 操作列
 			key: 'option', // 操作列
 			render: () =>
 				renderOptions([
 					{
 						key: 'edit',
-						name: '编辑',
+						name: 'edit',
 						onClick: () => {},
 					},
 				]),
 		},
 		{
+			// 列名称 / 筛选框的占位符
 			title: ['startTime', 'endTime'],
+			// 对应后端字段
 			dataIndex: 'startAndOverTime',
+			// 属性
 			valueType: 'dateRange',
+			// 隐藏表格
 			hideInTable: true,
+			// 筛选栏
 			search: {
 				transform: (value: any) => ({ startTime: value[0], overTime: value[1] }),
 			},
 		},
 		{
-			title: 'key',
-			dataIndex: 'key',
-			search: {
-				transform: (value: any) => ({ keyword: value }),
-			},
-		},
-		{
-			title: 'name1',
-			dataIndex: 'name1',
+			title: 'name',
+			dataIndex: 'name',
 		},
 	];
 
@@ -51,12 +50,7 @@ const Index: React.FC = () => {
 		[
 			{
 				key: 'add',
-				name: '新增',
-				onClick: () => {},
-			},
-			{
-				key: 'export',
-				name: '导出',
+				name: 'add',
 				onClick: () => {},
 			},
 		],
@@ -68,7 +62,7 @@ const Index: React.FC = () => {
 			[
 				{
 					key: 'batchExport',
-					name: '批量导出',
+					name: 'batchExport',
 					onClick: () => {
 						console.log(selectedRowKeys, selectedRows, onCleanSelected);
 						actionRef.current?.reload();
@@ -77,7 +71,7 @@ const Index: React.FC = () => {
 				},
 				{
 					key: 'batchDelete',
-					name: '批量删除',
+					name: 'batchDelete',
 					onClick: () => {
 						console.log(selectedRowKeys, selectedRows, onCleanSelected);
 						onCleanSelected();
@@ -94,16 +88,38 @@ const Index: React.FC = () => {
 		console.log(current);
 		console.log(pageSize);
 		console.log(otherParams);
-		return {
-			success: true,
-			data: [
-				{
-					name1: 123,
-					key: 1,
-				},
-			],
-			total: 1,
-		};
+		try {
+			const res = await queryListData({
+				pageNo: current,
+				pageSize,
+				...otherParams
+			});
+			if (res.success) {
+				return {
+					success: true,
+					data: res.data.dataList,
+					total: res.data.totalCount,
+				};
+			} else {
+				return {
+					success: true,
+					data: [],
+					total: 0,
+				};
+			}
+		} catch (error) {
+			// demo，正式开发去掉
+			return {
+				success: true,
+				data: [
+					{
+						name1: 123,
+						key: 1,
+					},
+				],
+				total: 1,
+			};
+		}
 	};
 
 	return (
@@ -119,6 +135,7 @@ const Index: React.FC = () => {
 };
 
 export default Index;
+				
 		`
 	)
 }

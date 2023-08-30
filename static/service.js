@@ -1,13 +1,12 @@
-module.exports = () => {
+module.exports = (info) => {
 	return (
 		`
 import { request } from '@umijs/max';
-import { SNS_API } from 'config/settings/constants';
-import { LivingManagerList, LivingManagerParams } from './typings';
+import { ${info.pageName}List, ${info.pageName}Params } from './typings';
 
-/** POST /live/live-config/page */
-export async function queryLivingManagerList(body: LivingManagerParams) {
-	return request<API.List_Result<LivingManagerList>>('/live-config/page', {
+/** POST /xxx/page */
+export async function queryListData(body: ${info.pageName}Params) {
+	return request<API.List_Result<${info.pageName}List>>('/xxx/page', {
 		method: 'POST',
 		data: body,
 	});
