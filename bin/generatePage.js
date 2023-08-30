@@ -80,7 +80,7 @@ module.exports = async function (info, option) {
   const pageDetailFile = path.join(pageFolder, 'detail.tsx');
   const serviceFile = path.join(serviceFolder, 'index.tsx');
   const serviceTypeFile = path.join(serviceFolder, 'typings.d.ts');
-  generateFile(pageFile, JSON.parse(JSON.stringify(pageData({}))));
+  generateFile(pageFile, JSON.parse(JSON.stringify(pageData({info}))));
   if (info.detailType === 'new') {
     generateFile(pageDetailFile, '');
   }
