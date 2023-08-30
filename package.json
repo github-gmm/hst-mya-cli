@@ -1,6 +1,6 @@
 {
   "name": "hst-mya-cli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "华盛通脚手架",
   "bin": {
     "hst-mya-cli": "bin/hstCli.js"
